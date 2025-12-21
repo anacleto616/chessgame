@@ -4,10 +4,14 @@ namespace Chessgame.Application;
 
 public class Display
 {
+    private const int BoardSizeLines = 8;
+    private const string BoardLetters = "  a b c d e f g h";
+
     public static void DisplayGameBoard(GameBoard board)
     {
         for (int i = 0; i < board.Lines; i++)
         {
+            Console.Write($"{BoardSizeLines - i} ");
             for (int j = 0; j < board.Columns; j++)
             {
                 Piece? piece = board.GetPiece(i, j);
@@ -18,10 +22,27 @@ public class Display
                     continue;
                 }
 
-                Console.Write($"{piece} ");
+                DisplayPiece(piece);
+                Console.Write(" ");
             }
 
             Console.WriteLine();
         }
+
+        Console.WriteLine(BoardLetters);
+    }
+
+    public static void DisplayPiece(Piece piece)
+    {
+        if (piece.Color == Color.Black)
+        {
+            ConsoleColor previousColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            Console.Write(piece);
+            Console.ForegroundColor = previousColor;
+            return;
+        }
+
+        Console.Write(piece);
     }
 }
