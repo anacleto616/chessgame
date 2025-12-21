@@ -1,9 +1,6 @@
-﻿using Chessgame.Board;
+﻿using Chessgame.Application;
+using Chessgame.Board;
 
-Position position = new(3, 4);
+GameBoard board = new(8, 8);
 
-Console.WriteLine($"Line: {position.Line}, Column: {position.Column}");
-
-Console.ReadLine();
-
-Board board = new(8, 8);
+Display.DisplayGameBoard(board);
