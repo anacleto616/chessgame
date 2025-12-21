@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Chessgame.Board/Chessgame.Board.csproj" />
+  </ItemGroup>
+
 </Project>
