@@ -10,4 +10,10 @@ public class GameBoard(int lines, int columns)
     {
         return _pieces[line, column];
     }
+
+    public void PlacePiece(Piece piece, Position position)
+    {
+        _pieces[position.Line, position.Column] = piece;
+        piece.Position = position;
+    }
 }

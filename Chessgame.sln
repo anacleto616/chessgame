@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CFBB1142-FFE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chessgame.Application", "src\Chessgame.Application\Chessgame.Application.csproj", "{4868059D-ADAF-42B2-905C-B7DAF8155207}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chessgame.Board", "src\Chessgame.Board\Chessgame.Board.csproj", "{660DD361-8FB8-43F0-998E-2D14BD2B7146}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chessgame.Chess", "src\Chessgame.Chess\Chessgame.Chess.csproj", "{A258DB64-8CCA-4442-A7EB-8566E6675DFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,18 @@ Global
 		{4868059D-ADAF-42B2-905C-B7DAF8155207}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4868059D-ADAF-42B2-905C-B7DAF8155207}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4868059D-ADAF-42B2-905C-B7DAF8155207}.Release|Any CPU.Build.0 = Release|Any CPU
+		{660DD361-8FB8-43F0-998E-2D14BD2B7146}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{660DD361-8FB8-43F0-998E-2D14BD2B7146}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{660DD361-8FB8-43F0-998E-2D14BD2B7146}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{660DD361-8FB8-43F0-998E-2D14BD2B7146}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A258DB64-8CCA-4442-A7EB-8566E6675DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A258DB64-8CCA-4442-A7EB-8566E6675DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A258DB64-8CCA-4442-A7EB-8566E6675DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A258DB64-8CCA-4442-A7EB-8566E6675DFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4868059D-ADAF-42B2-905C-B7DAF8155207} = {CFBB1142-FFE4-47DF-93CE-FA8F03A66F5D}
+		{660DD361-8FB8-43F0-998E-2D14BD2B7146} = {CFBB1142-FFE4-47DF-93CE-FA8F03A66F5D}
+		{A258DB64-8CCA-4442-A7EB-8566E6675DFD} = {CFBB1142-FFE4-47DF-93CE-FA8F03A66F5D}
 	EndGlobalSection
 EndGlobal
