@@ -1,28 +1,29 @@
 ﻿using Chessgame.Application;
 using Chessgame.Board;
+using Chessgame.Board.Exceptions;
 using Chessgame.Chess;
 
-// try
-// {
-GameBoard board = new(8, 8);
+try
+{
+    ChessMatch chessMatch = new();
 
-board.PlacePiece(new Rook(board, Color.White), new Position(0, 0));
-board.PlacePiece(new Rook(board, Color.White), new Position(0, 5));
-board.PlacePiece(new Rook(board, Color.Black), new Position(7, 7));
-board.PlacePiece(new King(board, Color.Black), new Position(0, 4));
+    while (!chessMatch.IsFinished)
+    {
+        Console.Clear();
+        Display.DisplayGameBoard(chessMatch.GameBoard);
 
-Display.DisplayGameBoard(board);
+        Console.WriteLine();
+        Console.Write("Source: ");
+        Position source = Display.ReadChessPosition().ToPosition();
+        Console.Write("Target: ");
+        Position target = Display.ReadChessPosition().ToPosition();
 
-// Console.ReadLine();
+        chessMatch.MovePiece(source, target);
+    }
+}
+catch (GameBoardException gbex)
+{
+    Console.WriteLine(gbex.Message);
+}
 
-// ChessPosition chessPosition = new('c', 7);
-
-// Console.WriteLine(chessPosition);
-
-// Console.WriteLine(chessPosition.ToPosition());
-
-// }
-// catch (GameBoardException ex)
-// {
-//     Console.WriteLine($"Game Board Error: {ex.Message}");
-// }
+Console.ReadLine();

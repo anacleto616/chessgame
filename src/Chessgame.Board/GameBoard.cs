@@ -35,6 +35,19 @@ public class GameBoard(int lines, int columns)
         piece.Position = position;
     }
 
+    public Piece? RemovePiece(Position position)
+    {
+        if (GetPiece(position) is null)
+        {
+            return null;
+        }
+
+        Piece removedPiece = GetPiece(position);
+        removedPiece.Position = null;
+        _pieces[position.Line, position.Column] = null;
+        return removedPiece;
+    }
+
     public bool ValidePosition(Position position)
     {
         if (

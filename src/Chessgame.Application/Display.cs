@@ -1,8 +1,9 @@
 using Chessgame.Board;
+using Chessgame.Chess;
 
 namespace Chessgame.Application;
 
-public class Display
+public static class Display
 {
     private const int BoardSizeLines = 8;
     private const string BoardLetters = "  a b c d e f g h";
@@ -32,7 +33,15 @@ public class Display
         Console.WriteLine(BoardLetters);
     }
 
-    public static void DisplayPiece(Piece piece)
+    public static ChessPosition ReadChessPosition()
+    {
+        string chessPosition = Console.ReadLine();
+        char column = chessPosition[0];
+        int line = int.Parse(chessPosition[1] + "");
+        return new ChessPosition(column, line);
+    }
+
+    private static void DisplayPiece(Piece piece)
     {
         if (piece.Color == Color.Black)
         {
