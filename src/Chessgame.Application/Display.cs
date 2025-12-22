@@ -17,20 +17,40 @@ public static class Display
             {
                 Piece? piece = board.GetPiece(i, j);
 
-                if (piece is null)
-                {
-                    Console.Write("- ");
-                    continue;
-                }
-
                 DisplayPiece(piece);
-                Console.Write(" ");
             }
 
             Console.WriteLine();
         }
 
         Console.WriteLine(BoardLetters);
+    }
+
+    public static void DisplayGameBoard(GameBoard board, bool[,] possibleMoves)
+    {
+        ConsoleColor originalBackground = Console.BackgroundColor;
+        ConsoleColor highlightedBackground = ConsoleColor.DarkGray;
+
+        for (int i = 0; i < board.Lines; i++)
+        {
+            Console.Write($"{BoardSizeLines - i} ");
+            for (int j = 0; j < board.Columns; j++)
+            {
+                Console.BackgroundColor = possibleMoves[i, j]
+                    ? highlightedBackground
+                    : originalBackground;
+
+                Piece? piece = board.GetPiece(i, j);
+
+                DisplayPiece(piece);
+                Console.BackgroundColor = originalBackground;
+            }
+
+            Console.WriteLine();
+        }
+
+        Console.WriteLine(BoardLetters);
+        Console.BackgroundColor = originalBackground;
     }
 
     public static ChessPosition ReadChessPosition()
@@ -41,17 +61,25 @@ public static class Display
         return new ChessPosition(column, line);
     }
 
-    private static void DisplayPiece(Piece piece)
+    private static void DisplayPiece(Piece? piece)
     {
-        if (piece.Color == Color.Black)
+        if (piece is not null)
         {
-            ConsoleColor previousColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            if (piece.Color == Color.Black)
+            {
+                ConsoleColor previousColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                Console.Write(piece);
+                Console.ForegroundColor = previousColor;
+                Console.Write(" ");
+                return;
+            }
+
             Console.Write(piece);
-            Console.ForegroundColor = previousColor;
+            Console.Write(" ");
             return;
         }
 
-        Console.Write(piece);
+        Console.Write("- ");
     }
 }

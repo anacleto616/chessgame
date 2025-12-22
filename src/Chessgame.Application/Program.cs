@@ -15,6 +15,13 @@ try
         Console.WriteLine();
         Console.Write("Source: ");
         Position source = Display.ReadChessPosition().ToPosition();
+
+        bool[,] possibleMoves = chessMatch.GameBoard.GetPiece(source).PossibleMoves();
+
+        Console.Clear();
+        Display.DisplayGameBoard(chessMatch.GameBoard, possibleMoves);
+
+        Console.WriteLine();
         Console.Write("Target: ");
         Position target = Display.ReadChessPosition().ToPosition();
 
