@@ -38,6 +38,9 @@ try
             Console.ReadLine();
         }
     }
+
+    Console.Clear();
+    Display.DisplayChessMatch(chessMatch);
 }
 catch (GameBoardException gbex)
 {

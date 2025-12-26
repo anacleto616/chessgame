@@ -21,8 +21,8 @@ public class ChessMatch
         IsCheck = false;
         Turn = 1;
         CurrentPlayer = Color.White;
-        Pieces = new HashSet<Piece>();
-        CapturedPieces = new HashSet<Piece>();
+        Pieces = [];
+        CapturedPieces = [];
         PutPieces();
     }
 
@@ -52,10 +52,16 @@ public class ChessMatch
             throw new GameBoardException("You can't put yourself in check!");
         }
 
-        IsCheck = IsInCheck(OpponentColor(CurrentPlayer));
+        var opponentColor = OpponentColor(CurrentPlayer);
 
-        Turn++;
-        ChangePlayer();
+        IsCheck = IsInCheck(opponentColor);
+        IsFinished = IsInCheckmate(opponentColor);
+
+        if (!IsFinished)
+        {
+            Turn++;
+            ChangePlayer();
+        }
     }
 
     public void UndoMove(Position source, Position target, Piece capturedPiece)
@@ -113,19 +119,11 @@ public class ChessMatch
 
     public HashSet<Piece> PiecesInGame(Color color)
     {
-        // HashSet<Piece> pieces = Pieces.Where(piece => piece.Color == color).ToHashSet();
+        HashSet<Piece> pieces = Pieces.Where(piece => piece.Color == color).ToHashSet();
 
-        HashSet<Piece> pieces = [];
+        var capturedPiecesByColor = CapturedPiecesByColor(color);
 
-        foreach (Piece piece in Pieces)
-        {
-            if (piece.Color == color)
-            {
-                pieces.Add(piece);
-            }
-        }
-
-        pieces.ExceptWith(CapturedPiecesByColor(color));
+        pieces.ExceptWith(capturedPiecesByColor);
 
         return pieces;
     }
@@ -153,6 +151,44 @@ public class ChessMatch
         return false;
     }
 
+    public bool IsInCheckmate(Color color)
+    {
+        if (!IsInCheck(color))
+        {
+            return false;
+        }
+
+        var piecesInGame = PiecesInGame(color);
+
+        foreach (Piece piece in piecesInGame)
+        {
+            bool[,] possibleMoves = piece.PossibleMoves();
+
+            for (int i = 0; i < GameBoard.Lines; i++)
+            {
+                for (int j = 0; j < GameBoard.Columns; j++)
+                {
+                    if (possibleMoves[i, j])
+                    {
+                        Position source = piece.Position;
+                        Position target = new(i, j);
+                        Piece capturedPiece = MovePiece(source, target);
+
+                        bool testCheck = IsInCheck(color);
+                        UndoMove(source, target, capturedPiece);
+
+                        if (!testCheck)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     private static Color OpponentColor(Color color)
     {
         return color == Color.White ? Color.Black : Color.White;
@@ -164,16 +200,6 @@ public class ChessMatch
         var king = piecesInGame.FirstOrDefault(piece => piece is King);
 
         return king ?? throw new GameBoardException($"The King not found color {color}");
-
-        // foreach (Piece piece in PiecesInGame(color))
-        // {
-        //     if (piece is King)
-        //     {
-        //         return piece;
-        //     }
-        // }
-
-        // return null;
     }
 
     private void ChangePlayer()
@@ -183,9 +209,10 @@ public class ChessMatch
 
     private void PutPieces()
     {
-        PutNewPieces('c', 1, new Rook(GameBoard, Color.White));
-        PutNewPieces('d', 1, new King(GameBoard, Color.White));
-        PutNewPieces('c', 8, new Rook(GameBoard, Color.Black));
-        PutNewPieces('d', 8, new King(GameBoard, Color.Black));
+        PutNewPieces('d', 1, new Rook(GameBoard, Color.White));
+        PutNewPieces('h', 7, new Rook(GameBoard, Color.White));
+        PutNewPieces('e', 1, new King(GameBoard, Color.White));
+        PutNewPieces('b', 8, new Rook(GameBoard, Color.Black));
+        PutNewPieces('a', 8, new King(GameBoard, Color.Black));
     }
 }

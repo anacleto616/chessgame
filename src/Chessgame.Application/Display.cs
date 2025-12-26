@@ -16,6 +16,14 @@ public static class Display
 
         Console.WriteLine();
         Console.WriteLine($"Turn: {chessMatch.Turn}");
+
+        if (chessMatch.IsFinished)
+        {
+            Console.WriteLine("CHECKMATE!");
+            Console.WriteLine($"Winner: {chessMatch.CurrentPlayer}");
+            return;
+        }
+
         Console.WriteLine($"Waiting player: {chessMatch.CurrentPlayer}");
 
         if (chessMatch.IsCheck)
