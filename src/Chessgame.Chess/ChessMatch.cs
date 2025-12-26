@@ -5,10 +5,12 @@ namespace Chessgame.Chess;
 
 public class ChessMatch
 {
+    public Color CurrentPlayer { get; private set; }
     public GameBoard GameBoard { get; private set; }
     public bool IsFinished { get; private set; }
     public int Turn { get; private set; }
-    public Color CurrentPlayer { get; private set; }
+    public HashSet<Piece> Pieces;
+    public HashSet<Piece> CapturedPieces;
 
     public ChessMatch()
     {
@@ -16,6 +18,8 @@ public class ChessMatch
         IsFinished = false;
         Turn = 1;
         CurrentPlayer = Color.White;
+        Pieces = new HashSet<Piece>();
+        CapturedPieces = new HashSet<Piece>();
         PutPieces();
     }
 
@@ -25,6 +29,11 @@ public class ChessMatch
         piece.IncreaseMoveCount();
         Piece capturedPiece = GameBoard.RemovePiece(target);
         GameBoard.PlacePiece(piece, target);
+
+        if (capturedPiece is not null)
+        {
+            CapturedPieces.Add(capturedPiece);
+        }
     }
 
     public void MakeMove(Position source, Position target)
@@ -58,6 +67,44 @@ public class ChessMatch
         }
     }
 
+    public HashSet<Piece> CapturedPiecesByColor(Color color)
+    {
+        HashSet<Piece> pieces = new HashSet<Piece>();
+
+        foreach (Piece piece in CapturedPieces)
+        {
+            if (piece.Color == color)
+            {
+                pieces.Add(piece);
+            }
+        }
+
+        return pieces;
+    }
+
+    public HashSet<Piece> PiecesInGame(Color color)
+    {
+        HashSet<Piece> pieces = new HashSet<Piece>();
+
+        foreach (Piece piece in Pieces)
+        {
+            if (piece.Color == color)
+            {
+                pieces.Add(piece);
+            }
+        }
+
+        pieces.ExceptWith(CapturedPiecesByColor(color));
+
+        return pieces;
+    }
+
+    public void PutNewPieces(char column, int line, Piece piece)
+    {
+        GameBoard.PlacePiece(piece, new ChessPosition(column, line).ToPosition());
+        Pieces.Add(piece);
+    }
+
     private void ChangePlayer()
     {
         CurrentPlayer = CurrentPlayer == Color.White ? Color.Black : Color.White;
@@ -65,9 +112,9 @@ public class ChessMatch
 
     private void PutPieces()
     {
-        GameBoard.PlacePiece(new Rook(GameBoard, Color.White), new Position(0, 0));
-        GameBoard.PlacePiece(new Rook(GameBoard, Color.White), new Position(0, 5));
-        GameBoard.PlacePiece(new Rook(GameBoard, Color.Black), new Position(7, 7));
-        GameBoard.PlacePiece(new King(GameBoard, Color.Black), new Position(0, 4));
+        PutNewPieces('c', 1, new Rook(GameBoard, Color.White));
+        PutNewPieces('d', 1, new King(GameBoard, Color.White));
+        PutNewPieces('c', 8, new Rook(GameBoard, Color.Black));
+        PutNewPieces('d', 8, new King(GameBoard, Color.Black));
     }
 }

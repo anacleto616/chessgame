@@ -8,6 +8,50 @@ public static class Display
     private const int BoardSizeLines = 8;
     private const string BoardLetters = "  a b c d e f g h";
 
+    public static void DisplayChessMatch(ChessMatch chessMatch)
+    {
+        DisplayGameBoard(chessMatch.GameBoard);
+
+        DisplayCapturedPieces(chessMatch);
+
+        Console.WriteLine();
+        Console.WriteLine($"Turn: {chessMatch.Turn}");
+        Console.WriteLine($"Waiting player: {chessMatch.CurrentPlayer}");
+    }
+
+    public static void DisplayCapturedPieces(ChessMatch chessMatch)
+    {
+        Console.WriteLine("Captured Pieces:");
+
+        Console.Write("White Pieces: ");
+        DisplaySetPieces(chessMatch.CapturedPiecesByColor(Color.White));
+
+        Console.WriteLine();
+
+        Console.Write("Black Pieces: ");
+
+        ConsoleColor originalConsoleColor = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.DarkBlue;
+
+        DisplaySetPieces(chessMatch.CapturedPiecesByColor(Color.Black));
+
+        Console.ForegroundColor = originalConsoleColor;
+
+        Console.WriteLine();
+    }
+
+    public static void DisplaySetPieces(HashSet<Piece> setPieces)
+    {
+        Console.Write("[");
+
+        foreach (Piece piece in setPieces)
+        {
+            Console.Write($"{piece} ");
+        }
+
+        Console.Write("]");
+    }
+
     public static void DisplayGameBoard(GameBoard board)
     {
         for (int i = 0; i < board.Lines; i++)
@@ -24,6 +68,8 @@ public static class Display
         }
 
         Console.WriteLine(BoardLetters);
+
+        Console.WriteLine();
     }
 
     public static void DisplayGameBoard(GameBoard board, bool[,] possibleMoves)

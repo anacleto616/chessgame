@@ -12,11 +12,7 @@ try
         try
         {
             Console.Clear();
-            Display.DisplayGameBoard(chessMatch.GameBoard);
-
-            Console.WriteLine();
-            Console.WriteLine($"Turn: {chessMatch.Turn}");
-            Console.WriteLine($"Waiting player: {chessMatch.CurrentPlayer}");
+            Display.DisplayChessMatch(chessMatch);
 
             Console.WriteLine();
             Console.Write("Source: ");
