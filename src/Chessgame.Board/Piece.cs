@@ -12,6 +12,11 @@ public abstract class Piece(GameBoard board, Color color)
         MoveCount++;
     }
 
+    public void DecreaseMoveCount()
+    {
+        MoveCount--;
+    }
+
     public bool HasPossibleMoves()
     {
         bool[,] possibleMoves = PossibleMoves();

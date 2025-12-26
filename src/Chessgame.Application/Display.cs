@@ -17,6 +17,11 @@ public static class Display
         Console.WriteLine();
         Console.WriteLine($"Turn: {chessMatch.Turn}");
         Console.WriteLine($"Waiting player: {chessMatch.CurrentPlayer}");
+
+        if (chessMatch.IsCheck)
+        {
+            Console.WriteLine("CHECK!");
+        }
     }
 
     public static void DisplayCapturedPieces(ChessMatch chessMatch)
