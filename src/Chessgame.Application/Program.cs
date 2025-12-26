@@ -9,23 +9,38 @@ try
 
     while (!chessMatch.IsFinished)
     {
-        Console.Clear();
-        Display.DisplayGameBoard(chessMatch.GameBoard);
+        try
+        {
+            Console.Clear();
+            Display.DisplayGameBoard(chessMatch.GameBoard);
 
-        Console.WriteLine();
-        Console.Write("Source: ");
-        Position source = Display.ReadChessPosition().ToPosition();
+            Console.WriteLine();
+            Console.WriteLine($"Turn: {chessMatch.Turn}");
+            Console.WriteLine($"Waiting player: {chessMatch.CurrentPlayer}");
 
-        bool[,] possibleMoves = chessMatch.GameBoard.GetPiece(source).PossibleMoves();
+            Console.WriteLine();
+            Console.Write("Source: ");
+            Position source = Display.ReadChessPosition().ToPosition();
 
-        Console.Clear();
-        Display.DisplayGameBoard(chessMatch.GameBoard, possibleMoves);
+            chessMatch.ValidateSourcePosition(source);
 
-        Console.WriteLine();
-        Console.Write("Target: ");
-        Position target = Display.ReadChessPosition().ToPosition();
+            bool[,] possibleMoves = chessMatch.GameBoard.GetPiece(source).PossibleMoves();
 
-        chessMatch.MovePiece(source, target);
+            Console.Clear();
+            Display.DisplayGameBoard(chessMatch.GameBoard, possibleMoves);
+
+            Console.WriteLine();
+            Console.Write("Target: ");
+            Position target = Display.ReadChessPosition().ToPosition();
+            chessMatch.ValidateTargetPosition(source, target);
+
+            chessMatch.MakeMove(source, target);
+        }
+        catch (GameBoardException gbex)
+        {
+            Console.WriteLine(gbex.Message);
+            Console.ReadLine();
+        }
     }
 }
 catch (GameBoardException gbex)
