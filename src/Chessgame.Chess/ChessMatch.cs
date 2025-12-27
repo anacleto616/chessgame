@@ -99,6 +99,28 @@ public class ChessMatch
             CapturedPieces.Add(capturedPiece);
         }
 
+        // short castling
+        if (piece is King && target.Column == source.Column + 2)
+        {
+            Position positionSourceRook = new(source.Line, source.Column + 3);
+            Position positionTargetRook = new(source.Line, source.Column + 1);
+
+            Piece rook = GameBoard.RemovePiece(positionSourceRook);
+            rook.IncreaseMoveCount();
+            GameBoard.PlacePiece(rook, positionTargetRook);
+        }
+
+        // big castling
+        if (piece is King && target.Column == source.Column - 2)
+        {
+            Position positionSourceRook = new(source.Line, source.Column - 4);
+            Position positionTargetRook = new(source.Line, source.Column - 1);
+
+            Piece rook = GameBoard.RemovePiece(positionSourceRook);
+            rook.IncreaseMoveCount();
+            GameBoard.PlacePiece(rook, positionTargetRook);
+        }
+
         return capturedPiece;
     }
 
@@ -131,6 +153,28 @@ public class ChessMatch
         }
 
         GameBoard.PlacePiece(piece, source);
+
+        // short castling
+        if (piece is King && target.Column == source.Column + 2)
+        {
+            Position positionSourceRook = new(source.Line, source.Column + 3);
+            Position positionTargetRook = new(source.Line, source.Column + 1);
+
+            Piece rook = GameBoard.RemovePiece(positionTargetRook);
+            rook.DecreaseMoveCount();
+            GameBoard.PlacePiece(rook, positionSourceRook);
+        }
+
+        // big castling
+        if (piece is King && target.Column == source.Column - 2)
+        {
+            Position positionSourceRook = new(source.Line, source.Column - 4);
+            Position positionTargetRook = new(source.Line, source.Column - 1);
+
+            Piece rook = GameBoard.RemovePiece(positionTargetRook);
+            rook.DecreaseMoveCount();
+            GameBoard.PlacePiece(rook, positionSourceRook);
+        }
     }
 
     private static Color OpponentColor(Color color)
@@ -212,7 +256,7 @@ public class ChessMatch
         PutNewPieces('b', 1, new Knight(GameBoard, Color.White));
         PutNewPieces('c', 1, new Bishop(GameBoard, Color.White));
         PutNewPieces('d', 1, new Queen(GameBoard, Color.White));
-        PutNewPieces('e', 1, new King(GameBoard, Color.White));
+        PutNewPieces('e', 1, new King(GameBoard, Color.White, this));
         PutNewPieces('f', 1, new Bishop(GameBoard, Color.White));
         PutNewPieces('g', 1, new Knight(GameBoard, Color.White));
         PutNewPieces('h', 1, new Rook(GameBoard, Color.White));
@@ -229,7 +273,7 @@ public class ChessMatch
         PutNewPieces('b', 8, new Knight(GameBoard, Color.Black));
         PutNewPieces('c', 8, new Bishop(GameBoard, Color.Black));
         PutNewPieces('d', 8, new Queen(GameBoard, Color.Black));
-        PutNewPieces('e', 8, new King(GameBoard, Color.Black));
+        PutNewPieces('e', 8, new King(GameBoard, Color.Black, this));
         PutNewPieces('f', 8, new Bishop(GameBoard, Color.Black));
         PutNewPieces('g', 8, new Knight(GameBoard, Color.Black));
         PutNewPieces('h', 8, new Rook(GameBoard, Color.Black));
