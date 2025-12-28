@@ -10,7 +10,7 @@ public class ChessMatch
     public bool IsFinished { get; private set; }
     public int Turn { get; private set; }
     public bool IsCheck { get; private set; }
-    public Piece CanEnPassant { get; private set; }
+    public Piece? CanEnPassant { get; private set; }
     public HashSet<Piece> Pieces;
     public HashSet<Piece> CapturedPieces;
 
@@ -30,12 +30,30 @@ public class ChessMatch
     public void MakeMove(Position source, Position target)
     {
         Piece capturedPiece = MovePiece(source, target);
+        Piece piece = GameBoard.GetPiece(target);
 
         if (IsInCheck(CurrentPlayer))
         {
             UndoMove(source, target, capturedPiece);
 
             throw new GameBoardException("You can't put yourself in check!");
+        }
+
+        if (piece is Pawn)
+        {
+            if (
+                (piece.Color == Color.White && target.Line == 0)
+                || piece.Color == Color.Black && target.Line == 7
+            )
+            {
+                piece = GameBoard.RemovePiece(target);
+                Pieces.Remove(piece);
+
+                Piece queen = new Queen(GameBoard, piece.Color);
+
+                GameBoard.PlacePiece(queen, target);
+                Pieces.Add(queen);
+            }
         }
 
         var opponentColor = OpponentColor(CurrentPlayer);
@@ -49,17 +67,11 @@ public class ChessMatch
             ChangePlayer();
         }
 
-        Piece piece = GameBoard.GetPiece(target);
-
         // en passant
-        if (piece is Pawn && (target.Line == source.Line + 2 || target.Line == source.Line - 2))
-        {
-            CanEnPassant = piece;
-        }
-        else
-        {
-            CanEnPassant = null;
-        }
+        CanEnPassant =
+            piece is Pawn && (target.Line == source.Line + 2 || target.Line == source.Line - 2)
+                ? piece
+                : null;
     }
 
     public HashSet<Piece> CapturedPiecesByColor(Color color)
