@@ -2,8 +2,10 @@
 
 namespace Chessgame.Chess;
 
-public class Pawn(GameBoard board, Color color) : Piece(board, color)
+public class Pawn(GameBoard board, Color color, ChessMatch chessMatch) : Piece(board, color)
 {
+    private readonly ChessMatch _chessMatch = chessMatch;
+
     public override bool[,] PossibleMoves()
     {
         bool[,] matrix = new bool[Board.Lines, Board.Columns];
@@ -52,6 +54,53 @@ public class Pawn(GameBoard board, Color color) : Piece(board, color)
             matrix[position.Line, position.Column] = true;
         }
 
+        // en passant
+        if (position.Line == 3)
+        {
+            Position leftPosition = new(position.Line, position.Column - 1);
+            if (
+                Board.ValidePosition(leftPosition)
+                && HasOpponent(leftPosition)
+                && Board.GetPiece(leftPosition) == _chessMatch.CanEnPassant
+            )
+            {
+                matrix[leftPosition.Line - 1, leftPosition.Column] = true;
+            }
+
+            Position rightPosition = new(position.Line, position.Column + 1);
+            if (
+                Board.ValidePosition(rightPosition)
+                && HasOpponent(rightPosition)
+                && Board.GetPiece(rightPosition) == _chessMatch.CanEnPassant
+            )
+            {
+                matrix[rightPosition.Line - 1, rightPosition.Column] = true;
+            }
+        }
+
+        if (position.Line == 4)
+        {
+            Position leftPosition = new(position.Line, position.Column - 1);
+            if (
+                Board.ValidePosition(leftPosition)
+                && HasOpponent(leftPosition)
+                && Board.GetPiece(leftPosition) == _chessMatch.CanEnPassant
+            )
+            {
+                matrix[leftPosition.Line + 1, leftPosition.Column] = true;
+            }
+
+            Position rightPosition = new(position.Line, position.Column + 1);
+            if (
+                Board.ValidePosition(rightPosition)
+                && HasOpponent(rightPosition)
+                && Board.GetPiece(rightPosition) == _chessMatch.CanEnPassant
+            )
+            {
+                matrix[rightPosition.Line + 1, rightPosition.Column] = true;
+            }
+        }
+
         return matrix;
     }
 
@@ -64,5 +113,17 @@ public class Pawn(GameBoard board, Color color) : Piece(board, color)
     {
         Piece? piece = Board.GetPiece(position);
         return piece is null || piece.Color != Color;
+    }
+
+    private bool HasOpponent(Position position)
+    {
+        Piece piece = Board.GetPiece(position);
+
+        return piece is not null && piece.Color != Color;
+    }
+
+    private bool FreePosition(Position position)
+    {
+        return Board.GetPiece(position) is null;
     }
 }

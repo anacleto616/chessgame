@@ -10,6 +10,7 @@ public class ChessMatch
     public bool IsFinished { get; private set; }
     public int Turn { get; private set; }
     public bool IsCheck { get; private set; }
+    public Piece CanEnPassant { get; private set; }
     public HashSet<Piece> Pieces;
     public HashSet<Piece> CapturedPieces;
 
@@ -20,6 +21,7 @@ public class ChessMatch
         IsCheck = false;
         Turn = 1;
         CurrentPlayer = Color.White;
+        CanEnPassant = null;
         Pieces = [];
         CapturedPieces = [];
         PutPieces();
@@ -45,6 +47,18 @@ public class ChessMatch
         {
             Turn++;
             ChangePlayer();
+        }
+
+        Piece piece = GameBoard.GetPiece(target);
+
+        // en passant
+        if (piece is Pawn && (target.Line == source.Line + 2 || target.Line == source.Line - 2))
+        {
+            CanEnPassant = piece;
+        }
+        else
+        {
+            CanEnPassant = null;
         }
     }
 
@@ -110,7 +124,7 @@ public class ChessMatch
             GameBoard.PlacePiece(rook, positionTargetRook);
         }
 
-        // big castling
+        // long castling
         if (piece is King && target.Column == source.Column - 2)
         {
             Position positionSourceRook = new(source.Line, source.Column - 4);
@@ -119,6 +133,18 @@ public class ChessMatch
             Piece rook = GameBoard.RemovePiece(positionSourceRook);
             rook.IncreaseMoveCount();
             GameBoard.PlacePiece(rook, positionTargetRook);
+        }
+
+        // en passant
+        if (piece is Pawn && source.Column != target.Column && capturedPiece is null)
+        {
+            Position positionPawn =
+                piece.Color == Color.White
+                    ? new(target.Line + 1, target.Column)
+                    : new(target.Line - 1, target.Column);
+
+            capturedPiece = GameBoard.RemovePiece(positionPawn);
+            CapturedPieces.Add(capturedPiece);
         }
 
         return capturedPiece;
@@ -174,6 +200,20 @@ public class ChessMatch
             Piece rook = GameBoard.RemovePiece(positionTargetRook);
             rook.DecreaseMoveCount();
             GameBoard.PlacePiece(rook, positionSourceRook);
+        }
+
+        // en passant
+        if (piece is Pawn)
+        {
+            if (source.Column != target.Column && capturedPiece == CanEnPassant)
+            {
+                Piece pawn = GameBoard.RemovePiece(target);
+
+                Position positionPawn =
+                    piece.Color == Color.White ? new(3, target.Column) : new(4, target.Column);
+
+                GameBoard.PlacePiece(pawn, positionPawn);
+            }
         }
     }
 
@@ -263,7 +303,7 @@ public class ChessMatch
 
         for (int i = 'a'; i <= 'h'; i++)
         {
-            PutNewPieces((char)i, 2, new Pawn(GameBoard, Color.White));
+            PutNewPieces((char)i, 2, new Pawn(GameBoard, Color.White, this));
         }
     }
 
@@ -280,7 +320,7 @@ public class ChessMatch
 
         for (int i = 'a'; i <= 'h'; i++)
         {
-            PutNewPieces((char)i, 7, new Pawn(GameBoard, Color.Black));
+            PutNewPieces((char)i, 7, new Pawn(GameBoard, Color.Black, this));
         }
     }
 

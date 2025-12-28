@@ -4,7 +4,7 @@ namespace Chessgame.Chess;
 
 public class King(GameBoard board, Color color, ChessMatch chessMatch) : Piece(board, color)
 {
-    private ChessMatch _chessMatch = chessMatch;
+    private readonly ChessMatch _chessMatch = chessMatch;
 
     public override bool[,] PossibleMoves()
     {
@@ -77,7 +77,7 @@ public class King(GameBoard board, Color color, ChessMatch chessMatch) : Piece(b
                 }
             }
 
-            // special move big castling
+            // special move long castling
             Position positionRook2 = new(kingPosition.Line, kingPosition.Column - 4);
 
             if (CanRookCastling(positionRook2))
